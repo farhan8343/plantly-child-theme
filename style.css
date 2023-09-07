@@ -1,0 +1,50 @@
+/*
+Theme Name: Plantly
+Theme URI: http://demo2.drfuri.com/martfury
+Template: martfury
+Author: Plantly, LLC
+Author URI: https://plantly.io
+Description: Plantly custom theme
+Tags: one-column,two-columns,left-sidebar,right-sidebar,full-width-template,post-formats,theme-options,threaded-comments,translation-ready
+Version: 2.2.0.1601233956
+Updated: 2020-09-27 19:12:36
+
+*/
+
+/* Show custom fields at single product page*/
+
+
+add_action('woocommerce_single_product_summary','show_custom_acf_fields' , 30);
+
+function show_custom_acf_fields() {
+$fields = get_field_objects( );
+if( $fields ): ?>
+
+        <?php foreach( $fields as $field ): ?>
+<span class="acf-label-frontend"><?php echo $field['label']; ?></span>: <?php echo $field['value']; ?></br>
+        <?php endforeach; ?>
+
+<?php endif;
+    }
+
+/**
+ * Save custom field data
+ *
+ * @since 1.0.0
+ *
+ * @param int   $vendor_id
+ * @param array $dokan_settings
+ *
+ * @return void
+ */
+function dokan_custom_new_seller_created( $vendor_id, $dokan_settings ) {
+    $post_data = wp_unslash( $_POST );
+
+    $kennitala_id =  $post_data['kennitala_id'];
+    /**
+     * This will save kennitala_id value with the `dokan_custom_kennitala_id` user meta key
+     */
+    update_user_meta( $vendor_id, 'dokan_custom_kennitala_id', $kennitala_id );
+}
+
+add_action( 'dokan_new_seller_created', 'dokan_custom_new_seller_created', 10, 2 );
